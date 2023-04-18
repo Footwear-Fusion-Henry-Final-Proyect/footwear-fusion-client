@@ -952,7 +952,7 @@ select {
 }
 
 .admin-panel p {
-  font-size: 13pt;
+
 }
 
 .saludo-admin {
@@ -1090,6 +1090,11 @@ select {
   width: 235px;
   padding: 10px 0;
   margin-bottom: 5px;
+}
+
+.ventas{
+  text-align: left;
+  font-size: 9pt !important;
 }
 
 /*  ----   ADMIN   ---- */
