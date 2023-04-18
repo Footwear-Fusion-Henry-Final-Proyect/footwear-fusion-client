@@ -34,7 +34,8 @@ import {
   UPDATE_PRODUCT_CART,
   GET_ORDEN_USER,
   POST_PROMOTION,
-  POST_USER_ADMIN
+  POST_USER_ADMIN,
+  GET_SALES
 } from "../Actions/actions";
 
 const initialState = {
@@ -73,6 +74,7 @@ const initialState = {
   getMercadoPago: null,
   userCompras: null,
   ordenesCompras:null,
+  allOrdenesCompras: null,
 };
 
 const storedUser = localStorage.getItem("loginUser");
@@ -415,6 +417,14 @@ function rootReducer(state = initialState, action) {
       case POST_USER_ADMIN:
       return {
         ...state,
+      };
+
+      case GET_SALES:
+      const datosAllOrdenes = action.payload
+      console.log("DATOS", datosAllOrdenes)
+      return {
+        ...state,
+        allOrdenesCompras: datosAllOrdenes
       };
 
       // case POST_PROMOTION:

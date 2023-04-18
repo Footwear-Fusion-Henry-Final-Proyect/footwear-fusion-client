@@ -39,7 +39,7 @@ export default function Filters() {
     dispatch(getPrice());
   }, [dispatch]);
 
-  const [searchBrand, setSearchBrand] = useState("");
+    const [searchBrand, setSearchBrand] = useState("");
   const [searchSize, setSearchSize] = useState("");
 
   const handleSearchBrand = (e) => {
@@ -90,11 +90,29 @@ export default function Filters() {
 
   /* esto es parte del slider de precios  */
 
-  const handleBorrarFiltros =async()=>{
-    const checkboxes =  document.querySelectorAll("input[type='checkbox']");
-   checkboxes.forEach((checkbox) => (checkbox.checked = false));
-    await dispatch(getProducts())
-  }
+  const fetchProducts = () => {
+    window.location.reload();
+  };
+
+  const handleBorrarFiltros = async () => {
+    const checkboxes = document.querySelectorAll("input[type='checkbox']");
+    checkboxes.forEach((checkbox) => (checkbox.checked = false));
+    await dispatch(filterByBrand(""));
+    await dispatch(filterBySize(""));
+
+    fetchProducts(); 
+  };
+
+  useEffect(() => {
+    dispatch(filterByBrand(searchBrand));
+  }, [searchBrand, dispatch]);
+
+  useEffect(() => {
+    dispatch(filterBySize(searchSize));
+  }, [searchSize, dispatch]);
+
+
+  
 
   return (
     <div className="filtros">

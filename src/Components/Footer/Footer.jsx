@@ -1,15 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import medios from "../images/mediosdepago.png";
 import { useState } from "react";
-import { correoRegistroNewsletter, postNewsletter, createPromo, getNewsletter } from "../../Redux/Actions";
+import {  postNewsletter } from "../../Redux/Actions";
 import swal from "sweetalert";
-import { html } from "./correo";
-import axios from "axios";
+
 
 export default function Footer() {
   const dispatch = useDispatch()
-  const back = "http://localhost:3001";
-
   const [email, setEmail] = useState({
     email: ""
   });
@@ -17,7 +14,7 @@ export default function Footer() {
   const correo = {
     email: email.email, 
     subject:"Gracias por Suscribirte!",
-    html: html
+    //html: html
   }
 
   const capturarEmail = (evento) => {
@@ -29,14 +26,11 @@ export default function Footer() {
   };
 
   const newEmail = async ()=> {
-    swal("Ya estas registrado!", "Vas a recibir un correo de confirmación","success")
+    swal("Gracias por suscribirte!", "Revisá tu casilla de correo","success")
     setTimeout(() => {
       window.location.reload()
     }, 3000);
-    await dispatch(postNewsletter(email))
-    const promo = await axios.post(`${back}/promotions`);
-    const promoData = promo.data
-    await dispatch(correoRegistroNewsletter(correo, promoData))
+    await dispatch(postNewsletter(correo))
   }
 
   return (

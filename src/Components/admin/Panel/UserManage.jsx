@@ -215,7 +215,9 @@ export default function UserManage() {
                     className="sin-relleno blanco negrita mas-aire"
                     onClick={() => modificarState(u.id)}
                   >
-                    <p>{u.state}</p>
+                    <p className={` ${u.state === "Blocked" ? "rol-block" : ""}`}>
+                {u.state}
+              </p>
                   </button>
                 </div>
               )}

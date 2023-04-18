@@ -8,6 +8,7 @@ export default function SalesManage(){
   const user = useSelector((state) => state.loginUser);
   const userId = user.id;
   const allVentas = useSelector((state) => state.allOrdenesCompras)
+  console.log(allVentas);
 
   useEffect(() => {
     const orden = async () => {

@@ -47,7 +47,8 @@ import {
   GET_PROMOTIONS,
   PUT_PROMO_CURRENT,
   PUT_ROL_USER,
-  PUT_STATE_USER
+  PUT_STATE_USER,
+  GET_SALES,
 } from "../Actions/actions.js";
 
 const back = "http://localhost:3001";
@@ -735,6 +736,31 @@ export function getOrdenesCompraId(userId) {
       dispatch({
         type: GET_ORDEN_USER,
         payload: ordenesCompraUser,
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+}
+
+export function getAllOrdenesCompra() {
+  return async function (dispatch) {
+    const token = localStorage.getItem("token");
+    const headers = {
+      "x-access-token": token,
+    };
+    try {
+      const allOrdenesCompra = await axios.get(
+        `${back}/ordencompra/admin`,
+        { headers }
+      );
+      let allOrdenesCompraUser
+      allOrdenesCompra ? allOrdenesCompraUser = allOrdenesCompra.data : allOrdenesCompraUser = null;
+      console.log(allOrdenesCompra, 'actions');
+
+      dispatch({
+        type: GET_SALES,
+        payload: allOrdenesCompraUser,
       });
     } catch (error) {
       console.log(error.response.data);
