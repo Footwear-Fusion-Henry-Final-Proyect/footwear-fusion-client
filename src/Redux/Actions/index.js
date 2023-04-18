@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   GET_PRODUCTS,
+  POST_PRODUCTS,
   GET_PRODUCTS_BY_NAME,
   GET_PRODUCT_DETAIL,
   GET_CATEGORY,
@@ -45,7 +46,8 @@ import {
   POST_PROMOTIONS,
   GET_PROMOTIONS,
   PUT_PROMO_CURRENT,
-  POST_USER_ADMIN,
+  PUT_ROL_USER,
+  PUT_STATE_USER
 } from "../Actions/actions.js";
 
 const back = "http://localhost:3001";
@@ -275,6 +277,24 @@ export const registros = (email) => {
   };
 };
 
+export const registroAdmin = (email, rol) => {
+  console.log("accion",email, rol);
+  return async function (dispatch) {
+    try {
+      const apiData = await axios.post(`${back}/admin/registro`, {
+        email,rol
+      });
+      const usuario = apiData.data;
+      dispatch({
+        type: POST_REGISTRO,
+      });
+      return usuario;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 export const loginUserGoogle = (email) => {
   return async function (dispatch) {
     try {
@@ -354,14 +374,12 @@ export function addToCart(loginUserId, item) {
       const headers = {
         "x-access-token": token,
       };
-      var userCart = await axios.post(
+     await axios.post(
         `${back}/cart/${loginUserId}`,
         item,{headers}
       );
-      console.log(userCart);
       return dispatch({
         type: ADD_TO_CART,
-        payload: userCart,
       });
     } catch (error) {
       console.log(error);
@@ -418,13 +436,14 @@ export function getUserCart(loginUserId) {
         `${back}/cart/${loginUserId}`,{headers}
       );
       const userCartData = userCart.data;
-      console.log(userCartData, "actions get user cart");
       return dispatch({
         type: GET_CART_BY_ID,
         payload: userCartData,
       });
     } catch (error) {
-      console.log("parece que el problema esta aca, getUserCart");
+      console.log(error.response.data);//para recueprar el error del back
+      console.log("error cart",error );
+      throw error; // para poder mostrarlo en el front
     }
   };
 }
@@ -461,7 +480,8 @@ export function addFav(userId, prodId) {
         payload: favorito,
       });
     } catch (error) {
-      console.log(error.request.response);
+      console.log(error.response.data);//para recueprar el error del back
+      throw error; // para poder mostrarlo en el front
     }
   };
 }
@@ -483,7 +503,8 @@ export function getFav(userId) {
         payload: favorito,
       });
     } catch (error) {
-      console.log(error.request.response);
+      console.log(error.response.data);//para recueprar el error del back
+      throw error; // para poder mostrarlo en el front
     }
   };
 }
@@ -530,7 +551,7 @@ export const postNewsletter = (email) => {
   };
 };
 
-export const getNewsletter = (email) => {
+export const getNewsletter = () => {
   return async function (dispatch) {
     const token = localStorage.getItem("token");
     const headers = {
@@ -551,13 +572,12 @@ export const getNewsletter = (email) => {
   };
 };
 
-export const correoRegistroNewsletter = (correo, promo) => {
-  console.log(correo, promo, 'action');
+export const correoRegistroNewsletter = (correo) => {
   return async function (dispatch) {
     try {
       await axios.post(
         `${back}/correo/registroNewsletter`,
-        { data: { correo, promo } }
+        correo
       );
       dispatch({
         type: REGISTRO_NEWSLETTER,
@@ -628,7 +648,6 @@ export const getDatosUser = (loginUserId) => {
         { headers }
       );
       const apiData = response.data;
-      console.log(apiData);
       dispatch({
         type: GET_DATOS_USER,
         payload: apiData,
@@ -649,6 +668,24 @@ export const putRolUser = (userId, rol) => {
       await axios.put(`${back}/user/${userId}`,{rol},{headers})
       dispatch({
         type: PUT_ROL_USER
+      })
+    } catch (error) {
+      console.log(error.response.data);
+    }
+   
+  }
+}
+
+export const putStateUser = (userId, state) => {
+  return async function(dispatch){
+    try {
+      const token = localStorage.getItem("token");
+      const headers = {
+        "x-access-token": token,
+      };
+      await axios.put(`${back}/user/state/${userId}`,{state},{headers})
+      dispatch({
+        type: PUT_STATE_USER
       })
     } catch (error) {
       console.log(error.response.data);
@@ -813,28 +850,5 @@ export const putPromo = (promotionId, loginUserId ) => {
       throw error;// para poder mostrarlo en el front
     }
   } 
+  
 }
-
-export function createUserAdmin(adminData) {
-  return async function (dispatch) {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = {
-        "x-access-token": token,
-      };
-      await axios.post(
-        `${back}/admin/registro`,
-        { adminData },
-        { headers }
-      );
-      return dispatch({
-        type: POST_USER_ADMIN,
-      });
-    } catch (error) {
-      console.log(error.response.data);//para recueprar el error del back
-      throw error; // para poder mostrarlo en el front
-    }
-  };
-}
-
-
