@@ -50,6 +50,7 @@ export const POST_MERCADO_PAGO = "POST_MERCADO_PAGO";
 export const GET_MERCADO_PAGO = "GET_MERCADO_PAGO";
 export const GET_DATOS_USER = "GET_DATOS_USER";
 export const PUT_ROL_USER = "PUT_ROL_USER";
+export const PUT_STATE_USER = "PUT_STATE_USER";
 export const GET_ORDEN_DE_COMPRA="GET_ORDEN_DE_COMPRA";
 //acciones del administrador
 export const GET_USER_DETAIL=" GET_USER_DETAIL"
