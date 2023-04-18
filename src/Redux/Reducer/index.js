@@ -34,7 +34,8 @@ import {
   UPDATE_PRODUCT_CART,
   GET_ORDEN_USER,
   POST_PROMOTION,
-  POST_USER_ADMIN
+  POST_USER_ADMIN,
+  GET_SALES,
 } from "../Actions/actions";
 
 const initialState = {
@@ -72,7 +73,8 @@ const initialState = {
   postMercadoPago: null,
   getMercadoPago: null,
   userCompras: null,
-  ordenesCompras:null,
+  ordenesCompras: null,
+  allOrdenesCompras: null,
 };
 
 const storedUser = localStorage.getItem("loginUser");
@@ -242,23 +244,23 @@ function rootReducer(state = initialState, action) {
         products: filteredProducts,
       };
 
-      case FILTER_BY_SIZE:
-        const sizeFilter = action.payload;
-        let sizeProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
-        if (sizeFilter) {
-          sizeProd = sizeProd.filter((product) => {
-            if (product.TalleProducts) {
-              return product.TalleProducts[0].talle.split(",").filter((e) => e === action.payload).length > 0;
-            } else {
-              return false;
-            }
-          });
-        }
-        return {
-          ...state,
-          products: sizeProd,
-          filteredProducts: sizeProd
-        };
+    case FILTER_BY_SIZE:
+      const sizeFilter = action.payload;
+      let sizeProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
+      if (sizeFilter) {
+        sizeProd = sizeProd.filter((product) => {
+          if (product.TalleProducts) {
+            return product.TalleProducts[0].talle.split(",").filter((e) => e === action.payload).length > 0;
+          } else {
+            return false;
+          }
+        });
+      }
+      return {
+        ...state,
+        products: sizeProd,
+        filteredProducts: sizeProd
+      };
 
     case FILTER_BY_BRAND:
       const brandFilter = action.payload.toUpperCase();
@@ -290,28 +292,28 @@ function rootReducer(state = initialState, action) {
             : sortedProducts,
       };
 
-      case PRICE_RANGE_SELECTOR:
-        const { minPrice, maxPrice } = action.payload;
-        let priceProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
-        let nuevoPrecio = [];
-        if (minPrice && maxPrice) {
-          priceProd &&
-            priceProd.filter((product) => {
-              if (
-                Number(product.price) >= minPrice &&
-                Number(product.price) <= maxPrice
-              ) {
-                nuevoPrecio.push(product);
-              }
-            });
-        }
-  
-        return {
-          ...state,
-          selectedPriceRange: { minPrice, maxPrice },
-          products: nuevoPrecio,
-          filteredProducts:nuevoPrecio
-        };
+    case PRICE_RANGE_SELECTOR:
+      const { minPrice, maxPrice } = action.payload;
+      let priceProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
+      let nuevoPrecio = [];
+      if (minPrice && maxPrice) {
+        priceProd &&
+          priceProd.filter((product) => {
+            if (
+              Number(product.price) >= minPrice &&
+              Number(product.price) <= maxPrice
+            ) {
+              nuevoPrecio.push(product);
+            }
+          });
+      }
+
+      return {
+        ...state,
+        selectedPriceRange: { minPrice, maxPrice },
+        products: nuevoPrecio,
+        filteredProducts: nuevoPrecio
+      };
 
     case ADD_SIZE:
       const size = action.payload;
@@ -358,14 +360,22 @@ function rootReducer(state = initialState, action) {
         itemFav: action.payload,
       };
 
-      case GET_ORDEN_USER:
-        const datosOrden= action.payload
-        console.log("DATOS", datosOrden)
-        return {
-          ...state,
-          ordenesCompra: datosOrden
-        };
-        
+    case GET_ORDEN_USER:
+      const datosOrden = action.payload
+      console.log("DATOS", datosOrden)
+      return {
+        ...state,
+        ordenesCompra: datosOrden
+      };
+      
+    case GET_SALES:
+      const datosAllOrdenes = action.payload
+      console.log("DATOS", datosAllOrdenes)
+      return {
+        ...state,
+        allOrdenesCompras: datosAllOrdenes
+      };
+
     case DELETE_FAV:
       return {
         ...state,
@@ -412,21 +422,21 @@ function rootReducer(state = initialState, action) {
         dataUser: datos
       };
 
-      case POST_USER_ADMIN:
+    case POST_USER_ADMIN:
       return {
         ...state,
       };
 
-      // case POST_PROMOTION:
-      //   const promo = action.payload;
-      //   return {
-      //     ...state,
-      //     promotions:
-      //     {
-      //       code: promo.code,
-      //       discount: promo.discount,
-      //     }
-      //   };
+    // case POST_PROMOTION:
+    //   const promo = action.payload;
+    //   return {
+    //     ...state,
+    //     promotions:
+    //     {
+    //       code: promo.code,
+    //       discount: promo.discount,
+    //     }
+    //   };
 
     default:
       return state;
