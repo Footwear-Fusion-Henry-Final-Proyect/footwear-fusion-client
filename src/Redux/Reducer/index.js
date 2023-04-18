@@ -29,11 +29,9 @@ import {
   POST_MERCADO_PAGO,
   GET_MERCADO_PAGO,
   GET_DATOS_USER,
-  POST_USER_SUCCESS,
   UPDATE_USER_FAILURE,
   DELETE_PRODUCT_CART,
   UPDATE_PRODUCT_CART,
-  PUT_PRODUCT_PRICE,
   GET_ORDEN_USER,
   POST_PROMOTION,
   POST_USER_ADMIN
@@ -74,6 +72,7 @@ const initialState = {
   postMercadoPago: null,
   getMercadoPago: null,
   userCompras: null,
+  ordenesCompras:null,
 };
 
 const storedUser = localStorage.getItem("loginUser");
@@ -243,26 +242,27 @@ function rootReducer(state = initialState, action) {
         products: filteredProducts,
       };
 
-    case FILTER_BY_SIZE:
-      const sizeFilter = action.payload;
-      let sizeProd = state.prodRender;
-      if (sizeFilter) {
-        sizeProd = sizeProd.filter((product) => {
-          if (product.TalleProducts) {
-            return product.TalleProducts[0].talle === action.payload;
-          } else {
-            return false;
-          }
-        });
-      }
-      return {
-        ...state,
-        products: sizeProd,
-      };
+      case FILTER_BY_SIZE:
+        const sizeFilter = action.payload;
+        let sizeProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
+        if (sizeFilter) {
+          sizeProd = sizeProd.filter((product) => {
+            if (product.TalleProducts) {
+              return product.TalleProducts[0].talle.split(",").filter((e) => e === action.payload).length > 0;
+            } else {
+              return false;
+            }
+          });
+        }
+        return {
+          ...state,
+          products: sizeProd,
+          filteredProducts: sizeProd
+        };
 
     case FILTER_BY_BRAND:
       const brandFilter = action.payload.toUpperCase();
-      let brandProd = state.prodRender;
+      let brandProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
       if (brandFilter) {
         brandProd = brandProd.filter((product) => {
           if (product.MarcaProducts && product.MarcaProducts.length > 0) {
@@ -275,6 +275,7 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         products: brandProd,
+        filteredProducts: brandProd
       };
 
     case ORDER_BY_PRICE:
@@ -289,27 +290,28 @@ function rootReducer(state = initialState, action) {
             : sortedProducts,
       };
 
-    case PRICE_RANGE_SELECTOR:
-      const { minPrice, maxPrice } = action.payload;
-      let priceProd = state.prodRender;
-      let nuevoPrecio = [];
-      if (minPrice && maxPrice) {
-        priceProd &&
-          priceProd.filter((product) => {
-            if (
-              Number(product.price) >= minPrice &&
-              Number(product.price) <= maxPrice
-            ) {
-              nuevoPrecio.push(product);
-            }
-          });
-      }
-
-      return {
-        ...state,
-        selectedPriceRange: { minPrice, maxPrice },
-        products: nuevoPrecio,
-      };
+      case PRICE_RANGE_SELECTOR:
+        const { minPrice, maxPrice } = action.payload;
+        let priceProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
+        let nuevoPrecio = [];
+        if (minPrice && maxPrice) {
+          priceProd &&
+            priceProd.filter((product) => {
+              if (
+                Number(product.price) >= minPrice &&
+                Number(product.price) <= maxPrice
+              ) {
+                nuevoPrecio.push(product);
+              }
+            });
+        }
+  
+        return {
+          ...state,
+          selectedPriceRange: { minPrice, maxPrice },
+          products: nuevoPrecio,
+          filteredProducts:nuevoPrecio
+        };
 
     case ADD_SIZE:
       const size = action.payload;
@@ -356,12 +358,14 @@ function rootReducer(state = initialState, action) {
         itemFav: action.payload,
       };
 
-    case GET_ORDEN_USER:
-      return {
-        ...state,
-        userCompras: action.payload,
-      };
-
+      case GET_ORDEN_USER:
+        const datosOrden= action.payload
+        console.log("DATOS", datosOrden)
+        return {
+          ...state,
+          ordenesCompra: datosOrden
+        };
+        
     case DELETE_FAV:
       return {
         ...state,

@@ -11,6 +11,7 @@ export default function UserOrders() {
   const compraProducto = useSelector((state) => state.ordenesCompra);
   const user = useSelector((state) => state.loginUser);
   const userId = user.id;
+  const token = localStorage.getItem("token");
 
   const [showPopup, setShowPopup] = useState(false);
   const [productId, setProductId] = useState(null); // para obtener el id del producto
@@ -33,10 +34,12 @@ export default function UserOrders() {
 
   useEffect(() => {
     const orden = async () => {
-      await dispatch(getOrdenesCompraId(userId));
+      if(token){
+        await dispatch(getOrdenesCompraId(userId));
+      }
     };
     orden();
-  }, [userId, dispatch]);
+  }, [token, dispatch]);
 
   const handleReview = (productId) => {
     dispatch(postPunctuation(productId, puntuacion));
@@ -45,13 +48,15 @@ export default function UserOrders() {
     setShowPopup(false)
   }
 
+  if(!token) return (<h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>)
+
   return (
     <div className="user-content">
       <div className="user-data">
         <img src={shoe} alt="footwear-fusion" />
         <div className="data-list">
           <h6>MIS PEDIDOS REALIZADOS</h6>
-          {compraProducto.length === 0 ? (
+          {!compraProducto ? (
             <div className="zapato-fav">
               <h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>
             </div>
@@ -79,7 +84,7 @@ export default function UserOrders() {
                         <p>
                           <b>{producto.title}</b> <br />
                           Código del producto: {producto.code} <br />
-                          Marca: {producto.marca.toUpperCase()}
+                          Marca: {producto.marca}
                         </p>
                       </div>
                       <button onClick={() => {
