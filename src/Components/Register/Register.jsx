@@ -125,6 +125,6 @@ export default function Register() {
         </div>
       </div>
       <img className="zapas" src={Zapas} alt="" />
-    </div>
-  );
+    </div>
+  );
 }
