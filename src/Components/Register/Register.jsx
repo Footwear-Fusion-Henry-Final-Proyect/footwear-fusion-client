@@ -31,6 +31,13 @@ export default function Register() {
     });
   };
 
+  const correo = {
+    email: email.email, 
+    subject:"¡Tus próximas zapatillas están acá!",
+    html: html
+}
+  
+
   const enviarDatos = async (evento) => {
     evento.preventDefault();
     setError("");
@@ -38,16 +45,21 @@ export default function Register() {
       const login = await registrarUserFirebase(user.email, user.password)
       await dispatch(registros(login.user.email))
       navigate("/")
+      Swal.fire("Ya estas registrado!", "Vas a recibir un correo de confirmación","success")
+      await dispatch(correoRegistroNewsletter(correo))
     } catch (error) {
       console.log(error.code);//esto me muestra por consola el codigo del error, para poder cambiar el mensaje.
       if(error.code === "auth/invalid-email"){
         setError("correo invalido")
+        Swal.fire("Correo invalido", "No pudimos registrarte","error")
       }
       if(error.code === "auth/weak-password"){
         setError("la contraseña debe contener 6 caracteres")
+        Swal.fire("Contraseña invalida", "La contraseña debe tener al menos 6 caracteres","error")
       }
       if(error.code === "auth/email-already-in-use"){
         setError("este correo ya se encuentra registrado")
+        Swal.fire("Correo invalido", "Este correo ya existe","error")
       }
     }
     

@@ -48,7 +48,7 @@ body::-webkit-scrollbar-thumb {
 
 h1 {
   font-size: 18pt;
-  font-weight: 900;
+  font-weight: 200;
   margin: 0;
 }
 
@@ -156,6 +156,7 @@ h1 {
   flex-direction: column;
   gap: 10px;
   height: 600px !important;
+  padding: 30px 0;
 }
 
 .widgetContainer span {
@@ -519,11 +520,13 @@ h1 {
 .cards-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  grid-gap: 55px;
   gap: 55px;
   padding: 0 20px;
   width: 60%;
   margin: 0 auto;
+  justify-content: space-around;
+  align-items: flex-start;
 }
 
 .cards-container h5 {
@@ -937,10 +940,6 @@ h1 {
   width: 600px;
 }
 
-.admin-panel p {
-  font-size: 13pt;
-}
-
 .saludo-admin {
   background-color: #0d0f12;
   color: #ffffff;
@@ -1002,6 +1001,7 @@ h1 {
 }
 
 .admin-content {
+  min-height: 100vh;
   background-color: #425866;
   display: flex;
   flex-direction: column;
@@ -1011,7 +1011,7 @@ h1 {
   position: relative;
   left: 100px;
   top: 80px;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: flex-start;
   grid-gap: 30px;
   gap: 30px;
@@ -1077,6 +1077,21 @@ h1 {
   width: 235px;
   padding: 10px 0;
   margin-bottom: 5px;
+}
+
+.ventas{
+  text-align: left;
+  font-size: 9pt !important;
+}
+
+.error-message{
+  font-size: 6pt !important;
+  font-weight: 800;
+  background-color: #c82c2c;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  position: relative;
 }
 
 /*  ----   ADMIN   ---- */

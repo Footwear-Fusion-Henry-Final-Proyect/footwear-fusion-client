@@ -31,7 +31,7 @@ export default function UserFavs() {
                 <div className="zapato-datos-fav">
                   <p>
                   <NavLink  to={`/product/${e.id}`}>
-                    <strong>{e.marca}</strong>
+                    <strong>{e.marca.toUpperCase()}</strong>
                     </NavLink>
                     <br />
                     {e.title}

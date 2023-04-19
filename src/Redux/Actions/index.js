@@ -47,9 +47,8 @@ import {
   GET_PROMOTIONS,
   PUT_PROMO_CURRENT,
   PUT_ROL_USER,
-  POST_USER_ADMIN,
+  PUT_STATE_USER,
   GET_SALES,
-  PUT_STATE_USER
 } from "../Actions/actions.js";
 
 const back = "http://localhost:3001";
@@ -874,6 +873,10 @@ export const putPromo = (promotionId, loginUserId ) => {
     }
   } 
   
+<<<<<<< HEAD
 }
 
 
+=======
+}
+>>>>>>> 6da578660127af960fecebefb37b01816b659471

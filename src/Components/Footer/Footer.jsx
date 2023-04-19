@@ -1,23 +1,21 @@
-
 import { useDispatch } from "react-redux";
 import medios from "../images/mediosdepago.png";
 import { useState } from "react";
-import { correoRegistroNewsletter, postNewsletter } from "../../Redux/Actions";
-import { html } from "./correo";
+import {  postNewsletter } from "../../Redux/Actions";
 import swal from "sweetalert";
+
 
 export default function Footer() {
   const dispatch = useDispatch()
-
   const [email, setEmail] = useState({
     email: ""
   });
 
   const correo = {
     email: email.email, 
-    subject:"Bienvenido al newsletter de FOOTWEAR FUSION",
-    html: html
-}
+    subject:"Gracias por Suscribirte!",
+    //html: html
+  }
 
   const capturarEmail = (evento) => {
     const { name, value } = evento.target;
@@ -28,12 +26,11 @@ export default function Footer() {
   };
 
   const newEmail = async ()=> {
-    swal("Ya estas registrado!", "Vas a recibir un correo de confirmacion","success")
+    swal("Gracias por suscribirte!", "Revisá tu casilla de correo","success")
     setTimeout(() => {
       window.location.reload()
     }, 3000);
-    await dispatch(postNewsletter(email))
-    await dispatch(correoRegistroNewsletter(correo))
+    await dispatch(postNewsletter(correo))
   }
   
   return (
