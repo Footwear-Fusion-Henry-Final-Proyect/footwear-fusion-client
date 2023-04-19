@@ -47,6 +47,8 @@ import {
   GET_PROMOTIONS,
   PUT_PROMO_CURRENT,
   PUT_ROL_USER,
+  POST_USER_ADMIN,
+  GET_SALES,
   PUT_STATE_USER
 } from "../Actions/actions.js";
 
@@ -724,12 +726,38 @@ export function getOrdenesCompraId(userId) {
         `${back}/ordencompra/${userId}`,
         { headers }
       );
-      const ordenesCompraUser = ordenesCompraId.data;
+      let ordenesCompraUser
+      ordenesCompraId ? ordenesCompraUser = ordenesCompraId.data : ordenesCompraUser = null;
       console.log(ordenesCompraUser, 'actions');
 
       dispatch({
         type: GET_ORDEN_USER,
         payload: ordenesCompraUser,
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+}
+
+export function getAllOrdenesCompra() {
+  return async function (dispatch) {
+    const token = localStorage.getItem("token");
+    const headers = {
+      "x-access-token": token,
+    };
+    try {
+      const allOrdenesCompra = await axios.get(
+        `${back}/ordencompra/admin`,
+        { headers }
+      );
+      let allOrdenesCompraUser
+      allOrdenesCompra ? allOrdenesCompraUser = allOrdenesCompra.data : allOrdenesCompraUser = null;
+      console.log(allOrdenesCompra, 'actions');
+
+      dispatch({
+        type: GET_SALES,
+        payload: allOrdenesCompraUser,
       });
     } catch (error) {
       console.log(error.response.data);

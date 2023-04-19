@@ -33,7 +33,13 @@ import {
   DELETE_PRODUCT_CART,
   UPDATE_PRODUCT_CART,
   GET_ORDEN_USER,
+<<<<<<< HEAD
   GET_PROMOTIONS,
+=======
+  POST_PROMOTION,
+  POST_USER_ADMIN,
+  GET_SALES,
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
 } from "../Actions/actions";
 
 const initialState = {
@@ -70,8 +76,14 @@ const initialState = {
   newsletter: [],
   postMercadoPago: null,
   getMercadoPago: null,
+<<<<<<< HEAD
   ordenesCompra: null,
   promotions: null,
+=======
+  userCompras: null,
+  ordenesCompras: null,
+  allOrdenesCompras: null,
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
 };
 
 const storedUser = localStorage.getItem("loginUser");
@@ -248,6 +260,7 @@ function rootReducer(state = initialState, action) {
 
     case FILTER_BY_SIZE:
       const sizeFilter = action.payload;
+<<<<<<< HEAD
       let sizeProd = state.filteredProducts.length
         ? state.filteredProducts
         : state.prodRender;
@@ -259,6 +272,13 @@ function rootReducer(state = initialState, action) {
                 .split(",")
                 .filter((e) => e === action.payload).length > 0
             );
+=======
+      let sizeProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
+      if (sizeFilter) {
+        sizeProd = sizeProd.filter((product) => {
+          if (product.TalleProducts) {
+            return product.TalleProducts[0].talle.split(",").filter((e) => e === action.payload).length > 0;
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
           } else {
             return false;
           }
@@ -267,7 +287,11 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         products: sizeProd,
+<<<<<<< HEAD
         filteredProducts: sizeProd,
+=======
+        filteredProducts: sizeProd
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
       };
 
     case FILTER_BY_BRAND:
@@ -304,9 +328,13 @@ function rootReducer(state = initialState, action) {
 
     case PRICE_RANGE_SELECTOR:
       const { minPrice, maxPrice } = action.payload;
+<<<<<<< HEAD
       let priceProd = state.filteredProducts.length
         ? state.filteredProducts
         : state.prodRender;
+=======
+      let priceProd = state.filteredProducts.length ? state.filteredProducts : state.prodRender;
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
       let nuevoPrecio = [];
       if (minPrice && maxPrice) {
         priceProd &&
@@ -324,7 +352,11 @@ function rootReducer(state = initialState, action) {
         ...state,
         selectedPriceRange: { minPrice, maxPrice },
         products: nuevoPrecio,
+<<<<<<< HEAD
         filteredProducts: nuevoPrecio,
+=======
+        filteredProducts: nuevoPrecio
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
       };
 
     case ADD_SIZE:
@@ -364,11 +396,27 @@ function rootReducer(state = initialState, action) {
       };
 
     case GET_ORDEN_USER:
+<<<<<<< HEAD
       const datosOrden = action.payload;
       console.log("DATOS", datosOrden);
       return {
         ...state,
         ordenesCompra: datosOrden,
+=======
+      const datosOrden = action.payload
+      console.log("DATOS", datosOrden)
+      return {
+        ...state,
+        ordenesCompra: datosOrden
+      };
+      
+    case GET_SALES:
+      const datosAllOrdenes = action.payload
+      console.log("DATOS", datosAllOrdenes)
+      return {
+        ...state,
+        allOrdenesCompras: datosAllOrdenes
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
       };
 
     case DELETE_FAV:
@@ -417,13 +465,31 @@ function rootReducer(state = initialState, action) {
         dataUser: datos,
       };
 
+<<<<<<< HEAD
     case GET_PROMOTIONS:
       const promo = action.payload;
+=======
+    case POST_USER_ADMIN:
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
       return {
         ...state,
         promotions: promo,
       };
 
+<<<<<<< HEAD
+=======
+    // case POST_PROMOTION:
+    //   const promo = action.payload;
+    //   return {
+    //     ...state,
+    //     promotions:
+    //     {
+    //       code: promo.code,
+    //       discount: promo.discount,
+    //     }
+    //   };
+
+>>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
     default:
       return state;
   }

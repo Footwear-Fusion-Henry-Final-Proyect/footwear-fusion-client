@@ -15,8 +15,7 @@ import swal from "sweetalert";
 
 export default function Detail() {
   const { prodId } = useParams();
-  const user = useSelector((state) => state.loginUser);
-  const loginUserId = user.id
+  const loginUserId = useSelector((state) => state.loginUser.id);
   const dispatch = useDispatch();
 
   const [isHovering, setIsHovering] = useState(false);
@@ -37,13 +36,11 @@ export default function Detail() {
 
   useEffect(() => {
     const userCart = async () => {
-      if(token){
-        await dispatch(getUserCart(loginUserId));
-        await dispatch(getFav(loginUserId));
-      }
+      await dispatch(getUserCart(loginUserId));
+      await dispatch(getFav(loginUserId));
     };
     userCart();
-  }, [token,dispatch]);
+  }, [dispatch]);
 
   const prod = useSelector((state) => state.detail);
 
@@ -136,6 +133,14 @@ export default function Detail() {
       swal("Error", "Logueate para continuar!", "error");
       return navigate("/login");
     }
+    if (!selectedSize || !selectedQty) {
+      swal(
+        "Error",
+        "Para agregar este producto al carrito debe seleccionar un talle y la cantidad",
+        "error"
+      );
+      return navigate(`/product/${prodId}`);
+    }
     await dispatch(addFav(loginUserId, prodId));
     await dispatch(getFav(loginUserId));
     swal("Excelente!", "Producto agregado a favoritos!", "success");
@@ -158,7 +163,7 @@ export default function Detail() {
         />
       </div>
       <div className="detail-der">
-        <h1>{marca}</h1>
+        <h1>{marca.toUpperCase()}</h1>
         <h2>{prod.title}</h2>
         <h3>${Number(prod.price).toLocaleString("de-DE")}.-</h3>
         <div className="options">
@@ -198,7 +203,7 @@ export default function Detail() {
               </button>
               <button className="favs" onClick={handleAddFav}>
                 {" "}
-                ❤️ Agregar a favoritos
+                ❤ Agregar a favoritos
               </button>
             </div>
           )}
@@ -224,6 +229,6 @@ export default function Detail() {
           </>
         ))}
       </div>
-    </div>
-  );
+    </div>
+  );
 }
