@@ -2,7 +2,7 @@ import userIcon from "../../images/user-icon.png";
 import userIconBlock from "../../images/user-icon-block.png";
 import userIconAdmin from "../../images/user-icon-admin.png";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers, postDataUser, putRolUser, putStateUser, registroAdmin } from "../../../Redux/Actions";
+import { getUsers, putRolUser, putStateUser, registroAdmin } from "../../../Redux/Actions";
 import { useEffect, useState } from "react";
 import ExportExcel from "react-export-excel";
 import UserPaginate from "./UserPaginate";
@@ -24,43 +24,72 @@ export default function UserManage() {
   const [showPopup, setShowPopup] = useState(false);
 
   const [adminData, setAdminData] = useState({
-    name: "",
-    last_name: "",
-    address: "",
-    phone: "",
+    // name: "",
+    // last_name: "",
+    // address: "",
+    // phone: "",
     email: "",
     password: "",
     rol: "",
   });
+
+  const [error, setError] = useState({
+    email: "",
+    password: "",
+    rol: "",
+    state: ""
+  });
+
   const changeHandler = (e) => {
     const property = e.target.name;
     const value = e.target.value;
-    setAdminData({ ...adminData, [property]: value });
-  };
+    if (property === 'email') {
+      validateMail({ ...adminData, [property]: value });
+      setAdminData({ ...adminData, [property]: value });
+    } else if (property === 'password') {
+      validatePassword({ ...adminData, [property]: value });
+      setAdminData({ ...adminData, [property]: value });
+    } else if (property === 'rol') {
+      validateRol({ ...adminData, [property]: value });
+      setAdminData({ ...adminData, [property]: value });
+    }
+    else { setAdminData({ ...adminData, [property]: value }) };
+  }
+
 
   const { registrarUserFirebase } = useAuth();
 
   const submitHandler = async () => {
-    try {
-      await registrarUserFirebase(adminData.email, adminData.password);
-      await dispatch(registroAdmin(adminData.email, adminData.rol)); 
-    setAdminData({
-      // name: "",
-      // last_name: "",
-      // address: "",
-      // phone: "",
-      email: "",
-      password: "",
-      rol: "",
-    });
-    swal("Excelente!", "Agregaste un nuevo integrante a tu equivo!", "success");
-    setShowPopup(false);
-  } catch (error) {
-      console.log("erro login", error);
+    if (adminData.email.length > 3 && adminData.password.length > 0 && adminData.rol.length > 0) {
+      if (error.email.length !== 0 || error.password.length !== 0 || error.rol.length !== 0) {
+        return swal("Error", "Debe completar los campos obligatorios", "error")
+      }
+      else {
+        try {
+          await registrarUserFirebase(adminData.email, adminData.password);
+          await dispatch(registroAdmin(adminData.email, adminData.rol));
+          setAdminData({
+            name: "",
+            last_name: "",
+            address: "",
+            phone: "",
+            email: "",
+            password: "",
+            rol: "",
+          });
+          swal("Excelente!", "Agregaste un nuevo integrante a tu equipo!", "success");
+          setShowPopup(false);
+        } catch (error) {
+          console.log("erro login", error);
+        }
+      }
+    } else {
+      return swal("Error", "Debe completar email, password y rol", "error")
+    }
   }
-  }
-    
-    
+
+
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const prodPerPage = 2;
@@ -83,7 +112,7 @@ export default function UserManage() {
     state: "",
   });
 
-  
+
 
   const modificarState = (id) => {
     setModifState((prevState) => ({
@@ -94,15 +123,20 @@ export default function UserManage() {
 
   const state = userState.state;
   const guardarState = async (id) => {
+    if(userState.state !== "New" && userState.state !== "Blocked"){
+      return swal("Error", "state incorrecto", "error")
+    }
     await dispatch(putStateUser(id, state));
     await dispatch(getUsers());
     setModifState((prevState) => ({
       ...prevState,
       [id]: false,
     }));
+    swal("Excelente!", "Se modifico el State correctamente", "success");
   };
 
   const cambiarState = (evento) => {
+    validateState({ ...userState,  state: evento.target.value, });
     setUserState((prevState) => ({
       ...prevState,
       state: evento.target.value,
@@ -114,25 +148,74 @@ export default function UserManage() {
     setModifRol((prevState) => ({
       ...prevState,
       [id]: true,
+      
     }));
   };
 
   const rol = userRol.rol;
   const guardarRol = async (id) => {
+    if(userRol.rol !== "admin" && userRol.rol !== "customer"){
+      return swal("Error", "rol incorrecto", "error")
+    }
     await dispatch(putRolUser(id, rol));
     await dispatch(getUsers());
     setModifRol((prevState) => ({
       ...prevState,
       [id]: false,
     }));
+    swal("Excelente!", "Se modifico el Rol correctamente", "success");
   };
 
   const cambiarRol = (evento) => {
+    validateRolAdmin({ ...userRol,  rol: evento.target.value, });
     setUserRol((prevState) => ({
       ...prevState,
       rol: evento.target.value,
     }));
   };
+
+  const validateMail = (adminData) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    adminData.email.length > 0 && emailRegex.test(adminData.email) ?
+      setError({ ...error, email: '' }) :
+      setError({ ...error, email: 'Debe colocar un email válido' })
+  };
+
+  const validatePassword = (adminData) => {
+    const passwordRegex = /^(?=.\d)(?=.[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+    adminData.password.length > 0 && passwordRegex.test(adminData.password) ?
+      setError({ ...error, password: '' }) :
+      setError({ ...error, password: 'La contraseña debe tener al menos 8 caracteres. La contraseña debe contener al menos una letra mayúscula. La contraseña debe contener al menos un número.' });
+  };
+
+  const validateRol = (adminData) => {
+    const rolRegex = /^(admin|customer)$/;
+    adminData.rol.length > 0 || userRol.rol.length > 0 && rolRegex.test(adminData.rol) ?
+      setError({ ...error, rol: '' }) :
+      setError({ ...error, rol: 'El rol debe ser "admin" o "customer"' });
+  };
+
+  const validateRolAdmin = (userRol) => {
+    const rolRegex = /^(admin|customer)$/;
+    userRol.rol.length > 0 && rolRegex.test(userRol.rol) ?
+      setError({ ...error, rol: '' }) :
+      setError({ ...error, rol: 'El rol debe ser "admin" o "customer"' });
+  };
+
+  const validateState = (userState) => {
+    const stateRegex = /^(New|Blocked)$/;
+    userState.state.length > 0 && stateRegex.test(userState.state) ?
+      setError({ ...error, state: '' }) :
+      setError({ ...error, state: 'El state debe "New" o "Blocked"' });
+  };
+
+  const handleBlur = () => {//esta es para que reconosca la primer letra que se coloca en el input y llame la validacion
+    validateRolAdmin(userRol);
+  };
+
+  const handleBlurState = () => {
+    validateState(userState)
+  }
 
   return (
     <div className="admin-content">
@@ -185,7 +268,9 @@ export default function UserManage() {
                     name="userRol"
                     value={userRol.rol}
                     onChange={cambiarRol}
+                    onBlur={handleBlur} //esta es para que reconosca la primer letra que se coloca en el input y llame la validacion
                   />
+                  {error.rol && <span>{error.rol}</span>}
                   <button onClick={() => guardarRol(u.id)}>guardar</button>
                 </div>
               ) : (
@@ -198,7 +283,7 @@ export default function UserManage() {
                   </button>
                 </div>
               )}
-              
+
               {modifState[u.id] ? (
                 <div>
                   <input
@@ -206,7 +291,9 @@ export default function UserManage() {
                     name="userState"
                     value={userState.state}
                     onChange={cambiarState}
+                    onBlur={handleBlurState}
                   />
+                  {error.state && <span>{error.state}</span>}
                   <button onClick={() => guardarState(u.id)}>guardar</button>
                 </div>
               ) : (
@@ -216,8 +303,8 @@ export default function UserManage() {
                     onClick={() => modificarState(u.id)}
                   >
                     <p className={` ${u.state === "Blocked" ? "rol-block" : ""}`}>
-                {u.state}
-              </p>
+                      {u.state}
+                    </p>
                   </button>
                 </div>
               )}
@@ -236,13 +323,16 @@ export default function UserManage() {
           <input type="text" value={adminData.address} onChange={changeHandler} name='address' placeholder="Domicilio" />
           <input type="text" value={adminData.phone} onChange={changeHandler} name='phone' placeholder="Teléfono (solo numeros)" /> */}
           <input type="text" value={adminData.email} onChange={changeHandler} name='email' placeholder="Email" />
-          <input type="text" value={adminData.password} onChange={changeHandler} name='password' placeholder="password" />
+          {error.email && <span>{error.email}</span>}
+          <input type="password" value={adminData.password} onChange={changeHandler} name='password' placeholder="password" />
+          {error.password && <span>{error.password}</span>}
           <input type="text" value={adminData.rol} onChange={changeHandler} name='rol' placeholder="Rol" />
+          {error.rol && <span>{error.rol}</span>}
           <button onClick={submitHandler}>Crear Administrador</button>
           <button onClick={() => setShowPopup(false)}>Cerrar</button>
           {/* </form> */}
         </div>
       )}
-    </div>
-  );
+    </div>
+  );
 }

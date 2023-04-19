@@ -1107,6 +1107,11 @@ select {
   position: relative;
 }
 
+.monto-total{
+  text-align: right;
+  font-weight: 300;
+}
+
 /*  ----   ADMIN   ---- */
 
 .swal-overlay {

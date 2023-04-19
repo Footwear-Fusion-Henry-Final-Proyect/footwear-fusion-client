@@ -45,6 +45,7 @@ export default function UserOrders() {
     setProductId(null);
     swal("Excelente!", "Gracias por tu comentario!", "success");
     setShowPopup(false);
+    
   };
 
   //if (!token) return <h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>;
@@ -91,6 +92,7 @@ export default function UserOrders() {
                       <button
                         onClick={() => {
                           setShowPopup(true);
+                          window.scrollTo(0, 0);
                           setProductId(producto.productId);
                         }}
                       >
