@@ -164,6 +164,7 @@ select {
   flex-direction: column;
   gap: 10px;
   height: 600px !important;
+  padding: 30px 0;
 }
 
 .widgetContainer span {
@@ -527,11 +528,13 @@ select {
 .cards-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  grid-gap: 55px;
   gap: 55px;
   padding: 0 20px;
   width: 60%;
   margin: 0 auto;
+  justify-content: space-around;
+  align-items: flex-start;
 }
 
 .cards-container h5 {
@@ -951,10 +954,6 @@ select {
   width: 600px;
 }
 
-.admin-panel p {
-
-}
-
 .saludo-admin {
   background-color: #0d0f12;
   color: #ffffff;
@@ -1016,6 +1015,7 @@ select {
 }
 
 .admin-content {
+  min-height: 100vh;
   background-color: #425866;
   display: flex;
   flex-direction: column;
@@ -1025,7 +1025,7 @@ select {
   position: relative;
   left: 100px;
   top: 80px;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: flex-start;
   grid-gap: 30px;
   gap: 30px;
@@ -1095,6 +1095,16 @@ select {
 .ventas{
   text-align: left;
   font-size: 9pt !important;
+}
+
+.error-message{
+  font-size: 6pt !important;
+  font-weight: 800;
+  background-color: #c82c2c;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  position: relative;
 }
 
 /*  ----   ADMIN   ---- */

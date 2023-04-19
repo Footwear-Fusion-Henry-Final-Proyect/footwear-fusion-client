@@ -5,7 +5,6 @@ import { getOrdenesCompraId, postPunctuation } from "../../Redux/Actions";
 import ReactStars from "react-stars";
 import swal from "sweetalert";
 
-
 export default function UserOrders() {
   const dispatch = useDispatch();
   const compraProducto = useSelector((state) => state.ordenesCompra);
@@ -21,8 +20,8 @@ export default function UserOrders() {
 
   const puntuacion = {
     punctuation: rating,
-    review: reviewText
-  }
+    review: reviewText,
+  };
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
@@ -34,7 +33,7 @@ export default function UserOrders() {
 
   useEffect(() => {
     const orden = async () => {
-      if(token){
+      if (token) {
         await dispatch(getOrdenesCompraId(userId));
       }
     };
@@ -43,12 +42,12 @@ export default function UserOrders() {
 
   const handleReview = (productId) => {
     dispatch(postPunctuation(productId, puntuacion));
-    setProductId(null); 
+    setProductId(null);
     swal("Excelente!", "Gracias por tu comentario!", "success");
-    setShowPopup(false)
-  }
+    setShowPopup(false);
+  };
 
-  if(!token) return (<h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>)
+  //if (!token) return <h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>;
 
   return (
     <div className="user-content">
@@ -56,7 +55,9 @@ export default function UserOrders() {
         <img src={shoe} alt="footwear-fusion" />
         <div className="data-list">
           <h6>MIS PEDIDOS REALIZADOS</h6>
-          {!compraProducto ? (
+
+          {!compraProducto || !token ? (
+            
             <div className="zapato-fav">
               <h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>
             </div>
@@ -87,13 +88,16 @@ export default function UserOrders() {
                           Marca: {producto.marca}
                         </p>
                       </div>
-                      <button onClick={() => {
-                         setShowPopup(true);
-                         setProductId(producto.productId); 
-                      }}>¡OPINÁ SOBRE EL PRODUCTO!</button>
+                      <button
+                        onClick={() => {
+                          setShowPopup(true);
+                          setProductId(producto.productId);
+                        }}
+                      >
+                        ¡OPINÁ SOBRE EL PRODUCTO!
+                      </button>
                     </div>
                   ))}
-                  
                 </div>
               </div>
             ))
@@ -102,24 +106,29 @@ export default function UserOrders() {
       </div>
       {showPopup && (
         <div className="popup review-popup">
-           <button onClick={() => setShowPopup(false)}>Cerrar</button>
+          <button onClick={() => setShowPopup(false)}>Cerrar</button>
           <h1>DEJANOS TU RESEÑA!</h1>
           <ReactStars
-              count={5}
-              size={24}
-              half={false}
-              value={rating}
-              onChange={handleRatingChange}
-            />
-          <textarea onChange={handleReviewTextChange}
+            count={5}
+            size={24}
+            half={false}
+            value={rating}
+            onChange={handleRatingChange}
+          />
+          <textarea
+            onChange={handleReviewTextChange}
             name="desc"
             id=""
             cols="37"
             rows="10"
             placeholder="Contanos que te pareció el producto"
           ></textarea>
-          <button onClick={() => handleReview(productId, puntuacion)} className="mas-aire">Enviar Review</button>
-         
+          <button
+            onClick={() => handleReview(productId, puntuacion)}
+            className="mas-aire"
+          >
+            Enviar Review
+          </button>
         </div>
       )}
     </div>
