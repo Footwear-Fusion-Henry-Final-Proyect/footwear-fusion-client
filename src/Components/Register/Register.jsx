@@ -6,7 +6,9 @@ import { useState } from "react";
 import { useAuth } from "./authContext";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { registros } from "../../Redux/Actions/index";
+import { correoRegistroNewsletter, registros } from "../../Redux/Actions/index";
+import {html} from "../Footer/correo"
+import Swal from "sweetalert2";
 
 export default function Register() {
   
@@ -32,7 +34,7 @@ export default function Register() {
   };
 
   const correo = {
-    email: email.email, 
+    email: user.email, 
     subject:"¡Tus próximas zapatillas están acá!",
     html: html
 }
@@ -44,9 +46,8 @@ export default function Register() {
     try {
       const login = await registrarUserFirebase(user.email, user.password)
       await dispatch(registros(login.user.email))
-      navigate("/")
-      Swal.fire("Ya estas registrado!", "Vas a recibir un correo de confirmación","success")
       await dispatch(correoRegistroNewsletter(correo))
+      Swal.fire("Ya estas registrado!", "Vas a recibir un correo de confirmación","success")
     } catch (error) {
       console.log(error.code);//esto me muestra por consola el codigo del error, para poder cambiar el mensaje.
       if(error.code === "auth/invalid-email"){

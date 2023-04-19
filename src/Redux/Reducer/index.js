@@ -414,10 +414,10 @@ function rootReducer(state = initialState, action) {
         dataUser: datos
       };
 
-      case POST_USER_ADMIN:
-      return {
-        ...state,
-      };
+      // case POST_USER_ADMIN:
+      // return {
+      //   ...state,
+      // };
 
       case GET_SALES:
       const datosAllOrdenes = action.payload
