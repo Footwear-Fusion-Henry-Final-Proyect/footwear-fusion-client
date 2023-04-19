@@ -1,12 +1,12 @@
 import {
   GET_PRODUCTS,
+  POST_PRODUCTS,
   GET_PRODUCTS_BY_NAME,
   GET_PRODUCT_DETAIL,
   GET_CATEGORY,
   GET_SIZE,
   GET_BRAND,
   GET_USERS,
-  GET_USER_BY_NAME,
   FILTER_BY_CATEGORY,
   FILTER_BY_BRAND,
   FILTER_BY_SIZE,
@@ -33,9 +33,6 @@ import {
   DELETE_PRODUCT_CART,
   UPDATE_PRODUCT_CART,
   GET_ORDEN_USER,
-<<<<<<< HEAD
-  GET_PROMOTIONS,
-=======
   POST_PROMOTION,
   POST_USER_ADMIN,
   GET_SALES
@@ -44,10 +41,10 @@ import {
 const initialState = {
   products: [],
   prodRender: [],
-  filteredProducts: [],
   detail: [],
   detailAdmin: [],
   categories: [],
+  filteredProducts: [],
   users: [],
   dataUser: {
     name: "",
@@ -75,10 +72,6 @@ const initialState = {
   newsletter: [],
   postMercadoPago: null,
   getMercadoPago: null,
-<<<<<<< HEAD
-  ordenesCompra: null,
-  promotions: null,
-=======
   userCompras: null,
   ordenesCompras:null,
   allOrdenesCompras: null,
@@ -181,7 +174,7 @@ function rootReducer(state = initialState, action) {
           name: "",
           last_name: "",
           phone: "",
-          address: "",
+          address: ""
         },
         postMercadoPago: null,
       };
@@ -197,6 +190,7 @@ function rootReducer(state = initialState, action) {
         ...state,
         detail: action.payload,
       };
+
 
     case GET_CATEGORY:
       return {
@@ -219,12 +213,6 @@ function rootReducer(state = initialState, action) {
       };
 
     case GET_USERS:
-      return {
-        ...state,
-        users: action.payload,
-      };
-
-    case GET_USER_BY_NAME:
       return {
         ...state,
         users: action.payload,
@@ -329,6 +317,7 @@ function rootReducer(state = initialState, action) {
 
     case ADD_SIZE:
       const size = action.payload;
+      console.log("console.log add_size", size);
       return {
         ...state,
         selectedSize: size,
@@ -336,9 +325,16 @@ function rootReducer(state = initialState, action) {
 
     case ADD_QUANTITY:
       const qty = action.payload;
+      console.log("console.log add_qty", qty);
       return {
         ...state,
         selectedQty: qty,
+      };
+
+    case ADD_TO_CART:
+      return {
+        ...state,
+        productoAgregado: [...action.payload],
       };
 
     case DELETE_PRODUCT_CART:
@@ -352,6 +348,7 @@ function rootReducer(state = initialState, action) {
       };
 
     case GET_CART_BY_ID:
+      console.log(action.payload, "payload reducer");
       return {
         ...state,
         item: action.payload,
@@ -414,7 +411,7 @@ function rootReducer(state = initialState, action) {
       const datos = action.payload;
       return {
         ...state,
-        dataUser: datos,
+        dataUser: datos
       };
 
       case POST_USER_ADMIN:
@@ -430,20 +427,17 @@ function rootReducer(state = initialState, action) {
         allOrdenesCompras: datosAllOrdenes
       };
 
-<<<<<<< HEAD
-=======
-    // case POST_PROMOTION:
-    //   const promo = action.payload;
-    //   return {
-    //     ...state,
-    //     promotions:
-    //     {
-    //       code: promo.code,
-    //       discount: promo.discount,
-    //     }
-    //   };
+      // case POST_PROMOTION:
+      //   const promo = action.payload;
+      //   return {
+      //     ...state,
+      //     promotions:
+      //     {
+      //       code: promo.code,
+      //       discount: promo.discount,
+      //     }
+      //   };
 
->>>>>>> eba038c75e9f77a35cb5f6a3e4769d19795c2e6d
     default:
       return state;
   }

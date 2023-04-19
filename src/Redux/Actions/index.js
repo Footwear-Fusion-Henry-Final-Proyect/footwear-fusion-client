@@ -873,10 +873,4 @@ export const putPromo = (promotionId, loginUserId ) => {
     }
   } 
   
-<<<<<<< HEAD
 }
-
-
-=======
-}
->>>>>>> 6da578660127af960fecebefb37b01816b659471
