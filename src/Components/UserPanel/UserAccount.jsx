@@ -9,6 +9,7 @@ import {
 } from "../../Redux/Actions";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 
 export default function UserAccount() {
   const user = useSelector((state) => state.loginUser);
@@ -32,6 +33,8 @@ export default function UserAccount() {
     address: "",
   });
 
+  const [errors, setErrors] = useState();
+
   const actualizarDatosUser = (evento) => {
     const { name, value } = evento.target;
     setDatos({
@@ -40,10 +43,45 @@ export default function UserAccount() {
     });
   };
 
+  const regex = /^\+[0-9]{12}$/;
+
   const enviarDatos = async () => {
     try {
+      for (const [key, value] of Object.entries(datos)) {
+        if (value === "") {
+          setErrors((prevState) => ({
+            ...prevState,
+            [key]: "Este campo es obligatorio",
+          }));
+          Swal.fire(
+            "Faltan Datos",
+            "Necesitamos que actualices tus datos para que tus compras te lleguen correctamente",
+            "error"
+          );
+          return;
+        }
+      
+      }
+      if (!datos.phone.startsWith("+") || !regex.test(datos.phone)) {
+        setErrors((prevState) => ({
+          ...prevState,
+          phone: "El número de teléfono debe comenzar con un signo '+' y contener 12 dígitos",
+        
+        }));
+        Swal.fire(
+          "Teléfono inválido",
+          "El número de teléfono debe comenzar con un signo '+' y contener 12 dígitos",
+          "error"
+        );
+        return;
+      }
       await dispatch(postDataUser(loginUserId, datos));
       await dispatch(getDatosUser(loginUserId));
+      Swal.fire(
+        "Datos modificados correctamente",
+        "¡Ya tenés tus datos actalizados para comprar!",
+        "success"
+      );
     } catch (error) {
       console.log(error.menssage);
     }
@@ -74,6 +112,9 @@ export default function UserAccount() {
                       placeholder="Añadir Nombre"
                       onChange={actualizarDatosUser}
                     />
+                  )}
+                  {errors && errors.name && (
+                    <p className="error-message">{errors.name}</p>
                   )}{" "}
                   &nbsp;
                   {dataUsers ? (
@@ -87,7 +128,9 @@ export default function UserAccount() {
                     />
                   )}
                 </span>
-
+                {errors && errors.last_name && (
+                  <p className="error-message">{errors.last_name}</p>
+                )}
                 <br />
 
                 <span>
@@ -102,7 +145,9 @@ export default function UserAccount() {
                     />
                   )}
                 </span>
-
+                {errors && errors.phone && (
+            <p className="error-message">{errors.phone}</p>
+          )}
                 <br />
 
                 <span>
@@ -117,10 +162,12 @@ export default function UserAccount() {
                     />
                   )}
                 </span>
+                {errors && errors.address && (
+            <p className="error-message">{errors.address}</p>
+          )}
                 <br />
                 {!dataUsers && <button onClick={enviarDatos}>Guardar</button>}
               </p>
-              
             </div>
           ) : (
             <div className="zapato-fav">
