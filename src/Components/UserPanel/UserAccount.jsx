@@ -43,7 +43,7 @@ export default function UserAccount() {
     });
   };
 
-  const regex = /^\+[0-9]{12}$/;
+  const regex = /^\+[0-9]/;
 
   const enviarDatos = async () => {
     try {
@@ -65,27 +65,31 @@ export default function UserAccount() {
       if (!datos.phone.startsWith("+") || !regex.test(datos.phone)) {
         setErrors((prevState) => ({
           ...prevState,
-          phone: "El número de teléfono debe comenzar con un signo '+' y contener 12 dígitos",
+          phone: "El número de teléfono debe comenzar con un signo '+'",
         
         }));
         Swal.fire(
           "Teléfono inválido",
-          "El número de teléfono debe comenzar con un signo '+' y contener 12 dígitos",
+          "El número de teléfono debe comenzar con un signo '+'",
           "error"
         );
         return;
       }
+
       await dispatch(postDataUser(loginUserId, datos));
       await dispatch(getDatosUser(loginUserId));
       Swal.fire(
         "Datos modificados correctamente",
         "¡Ya tenés tus datos actalizados para comprar!",
         "success"
-      );
+        );
+        setErrors(null)
     } catch (error) {
       console.log(error.menssage);
     }
   };
+
+
 
   return (
     <div className="user-content">

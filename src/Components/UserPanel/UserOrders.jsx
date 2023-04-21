@@ -48,8 +48,6 @@ export default function UserOrders() {
     
   };
 
-  //if (!token) return <h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>;
-
   return (
     <div className="user-content">
       <div className="user-data">
@@ -57,7 +55,7 @@ export default function UserOrders() {
         <div className="data-list">
           <h6>MIS PEDIDOS REALIZADOS</h6>
 
-          {!compraProducto || !token ? (
+          {compraProducto?.length === 0 || !token ? (
             
             <div className="zapato-fav">
               <h1>TODAVIA NO HAY PEDIDOS REALIZADOS</h1>

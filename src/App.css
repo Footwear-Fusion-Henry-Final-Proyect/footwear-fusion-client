@@ -106,6 +106,10 @@ select {
   text-align: center;
 }
 
+.swal-overlay--show-modal {
+  z-index: 99999999 !important;
+}
+
 .blanco {
   color: #fff !important;
   margin: 10px 0;

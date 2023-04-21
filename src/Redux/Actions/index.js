@@ -51,7 +51,7 @@ import {
   GET_SALES,
 } from "../Actions/actions.js";
 
-const back = "http://localhost:3001";
+const back = "https://pf-henry-footwear-production.up.railway.app";
 
 // const back = para el deploy
 
@@ -229,6 +229,7 @@ export function getUserByName(name) {
 
 export const postDataUser = (loginUserId, datos) => {
   return async (dispatch) => {
+    console.log(loginUserId, datos, "log de action");
     const token = localStorage.getItem("token");
     const headers = {
       "x-access-token": token,

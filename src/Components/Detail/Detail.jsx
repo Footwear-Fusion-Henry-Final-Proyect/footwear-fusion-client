@@ -133,14 +133,7 @@ export default function Detail() {
       swal("Error", "Logueate para continuar!", "error");
       return navigate("/login");
     }
-    if (!selectedSize || !selectedQty) {
-      swal(
-        "Error",
-        "Para agregar este producto al carrito debe seleccionar un talle y la cantidad",
-        "error"
-      );
-      return navigate(`/product/${prodId}`);
-    }
+   
     await dispatch(addFav(loginUserId, prodId));
     await dispatch(getFav(loginUserId));
     swal("Excelente!", "Producto agregado a favoritos!", "success");
